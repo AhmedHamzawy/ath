@@ -653,12 +653,6 @@
 @endsection
 
 @section('footer')
-{!! $ordersYear->script() !!}
-{!! $clientsYear->script() !!}
-{!! $bestSales->script() !!}
-{!! $topHospitalOrders->script() !!}
-{!! $ordersMonths->script() !!}
-{!! $topDoctors->script() !!}
 
 
 @endsection
