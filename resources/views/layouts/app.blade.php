@@ -24,7 +24,7 @@
 <body>
 
         {{--@unless(View::exists('auth.login'))--}}
-@if(Request::url() != "http://localhost/athomecare/public/invoice/94" && Request::url() != "http://localhost/athomecare/public/login")
+@if(Request::url() != "http://athdash.herokuapp.com/public/invoice/94" && Request::url() != "http://athdash.herokuapp.com/public/login")
 
 @include('layouts.header') 
 
@@ -33,7 +33,7 @@
 
 <div class="main">
     
-    @if(Request::url() != "http://localhost/athomecare/public/invoice/94" && Request::url() != "http://localhost/athomecare/public/login")
+    @if(Request::url() != "http://athdash.herokuapp.com/public/invoice/94" && Request::url() != "http://athdash.herokuapp.com/public/login")
         @include('layouts.aside')
     @endif
 
