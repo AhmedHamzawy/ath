@@ -288,7 +288,9 @@ class HomeController extends Controller
 
         $users = User::limit(16)->get();
 
-        return view('home' , compact('ordersToday','ordersSucceededToday','ordersPaidToday','clientsToday','ordersYear','orders','hospitals','doctors','services','ordersSucceeded','ordersPending','ordersPaid','hospitalsNew','doctorsNew','contactsNew','bankaccountsNumber','ordersNew','clientsYear','bestSales','invoices','hospitalsInMonthPercentage','doctorsInMonthPercentage','invoicesInMonthPercentage','usersInMonthPercentage','ordersPendingInMonthPercentage','ordersPaidInMonthPercentage','ordersMonths','topHospitalOrders','hospitalsNewShow','lava','activity','contact','activity','bestHospitalSales','bestDoctorSales','bestClientSales','topHospitalOrdersnames','topDoctors','users'));
+        //return view('home' , compact('ordersToday','ordersSucceededToday','ordersPaidToday','clientsToday','ordersYear','orders','hospitals','doctors','services','ordersSucceeded','ordersPending','ordersPaid','hospitalsNew','doctorsNew','contactsNew','bankaccountsNumber','ordersNew','clientsYear','bestSales','invoices','hospitalsInMonthPercentage','doctorsInMonthPercentage','invoicesInMonthPercentage','usersInMonthPercentage','ordersPendingInMonthPercentage','ordersPaidInMonthPercentage','ordersMonths','topHospitalOrders','hospitalsNewShow','lava','activity','contact','activity','bestHospitalSales','bestDoctorSales','bestClientSales','topHospitalOrdersnames','topDoctors','users'));
+        return view('home' , compact('ordersToday','ordersSucceededToday','ordersPaidToday','clientsToday','orders','hospitals','doctors','services','ordersSucceeded','ordersPending','ordersPaid','hospitalsNew','doctorsNew','contactsNew','bankaccountsNumber','ordersNew','invoices','hospitalsInMonthPercentage','doctorsInMonthPercentage','invoicesInMonthPercentage','usersInMonthPercentage','ordersPendingInMonthPercentage','ordersPaidInMonthPercentage','ordersMonths','hospitalsNewShow','activity','contact','activity','bestHospitalSales','bestDoctorSales','bestClientSales','topHospitalOrdersnames','users'));
+
     }
 
 
