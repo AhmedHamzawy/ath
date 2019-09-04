@@ -1,0 +1,199 @@
+<template>
+  <div>
+
+<!-- Modal -->
+<div class="modal fade" id="addStatus" tabindex="-1" role="dialog" aria-labelledby="addStatusLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addStatusLabel">إضافة حالة جديدة</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p v-if="verrors.length">
+    <b>الرجاء قم بتصحيح الأخطاء التالية :</b>
+    <ul>
+      <li v-for="error in verrors" :key="error">{{ error }}</li>
+    </ul>
+    </p>
+    <form @submit.prevent="addStatus" class="mb-3">
+      <div class="form-group">
+        <input type="text" name="name_ar" v-validate="'required'" class="form-control" placeholder="الإسم باللغة العربية" v-model="status.name_ar">
+        <span>{{ errors.first('name_ar') }}</span>
+      </div>
+      <div class="form-group">
+        <input type="text" name="name_en" v-validate="'required'" class="form-control" placeholder="الإسم باللغة الإنجليزية" v-model="status.name_en">
+        <span>{{ errors.first('name_en') }}</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" @click="clearForm()" data-dismiss="modal" class="btn btn-danger btn-block">إلغاء</button>
+        <button type="submit" class="btn btn-light btn-block">إضافة</button>
+      </div>
+    </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+    <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">الإسم باللغة العربية</th>
+      <th scope="col">الإسم باللغة الإنجليزية</th>
+      <th scope="col">العمليات</th>
+    </tr>
+  </thead>
+  <tbody>
+
+
+      
+    
+           <tr v-for="status in statuses" v-bind:key="status.id">
+      <th scope="row">{{ status.id }}</th>
+      <td>{{ status.name_ar }}</td>
+      <td>{{ status.name_en }}</td>
+      <td> <button @click="editStatus(status)" data-toggle="modal" data-target="#addStatus" class="btn btn-warning"><i class="fas fa-edit"></i></button>
+      <button @click="deleteStatus(status.id,auth_user_id)" class="btn btn-danger" v-if="status.id > 2"><i class="fas fa-trash"></i></button>
+      </td>
+    
+           </tr>
+     
+  </tbody>
+</table>
+
+
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        <li v-bind:class="[{disabled: !pagination.prev_page_url}]" class="page-item"><a class="page-link" href="#" @click="fetchStatuses(pagination.prev_page_url)">السابق</a></li>
+
+        <li class="page-item disabled"><a class="page-link text-dark" href="#">الصفحة {{ pagination.current_page }} من أصل {{ pagination.last_page }}</a></li>
+    
+        <li v-bind:class="[{disabled: !pagination.next_page_url}]" class="page-item"><a class="page-link" href="#" @click="fetchStatuses(pagination.next_page_url)">التالى</a></li>
+      </ul>
+    </nav>
+    
+  </div>
+</template>
+
+<script>
+export default {
+  props: ['auth_user_id'],
+  data() {
+    return {
+      verrors: [],
+      statuses: [],
+      status: {
+        id: '',
+        name_ar: '',
+        name_en: '',
+        user_add: this.auth_user_id
+      },
+      status_id: '',
+      pagination: {},
+      edit: false
+    };
+  },
+  created() {
+    this.fetchStatuses();
+  },
+  methods: {
+    fetchStatuses(page_url) {
+      let vm = this;
+      page_url = page_url || '../public/api/allstatuses';
+      fetch(page_url)
+        .then(res => res.json())
+        .then(res => {
+          this.statuses = res.data;
+          vm.makePagination(res.meta, res.links);
+        })
+        .catch(err => console.log(err));
+    },
+    makePagination(meta, links) {
+      let pagination = {
+        current_page: meta.current_page,
+        last_page: meta.last_page,
+        next_page_url: links.next,
+        prev_page_url: links.prev
+      };
+      this.pagination = pagination;
+    },
+    deleteStatus(id,user_id) {
+      if (confirm('هل أنت متأكد ؟')) {
+        fetch(`../public/api/deletestatus/${id}/${user_id}`, {
+          method: 'post'
+        })
+          .then(res => res.json())
+          .then(data => {
+            alert('تم حذف الحالة');
+            this.fetchStatuses();
+          })
+          .catch(err => console.log(err));
+      }
+    },
+    addStatus() {
+      if (this.edit === false) {
+        // Add
+        if(this.validation()){
+        fetch('../public/api/addstatus', {
+          method: 'post',
+          body: JSON.stringify(this.status),
+          headers: {
+            'content-type': 'application/json'
+          }
+        })
+          .then(res => res.json())
+          .then(data => {
+            this.clearForm();
+            alert('تم إضافة الحالة');
+            $('#addStatus').modal('hide');
+            $('.modal-backdrop').remove();
+            this.fetchStatuses();
+          })
+          .catch(err => console.log(err));}}
+       else {
+        // Update
+        fetch('../public/api/updatestatus', {
+          method: 'post',
+          body: JSON.stringify(this.status),
+          headers: {
+            'content-type': 'application/json'
+          }
+        })
+          .then(res => res.json())
+          .then(data => {
+            this.clearForm();
+            alert('تم التعديل على الحالة');
+            $('#addStatus').modal('hide');
+            $('.modal-backdrop').remove();
+            this.fetchStatuses();
+          })
+          .catch(err => console.log(err));
+      }
+    },
+    editStatus(status) {
+      this.edit = true;
+      this.status.id = status.id;
+      this.status.status_id = status.id;
+      this.status.name_ar = status.name_ar;
+      this.status.name_en = status.name_en;
+    },
+    clearForm() {
+      this.edit = false;
+      this.status.id = null;
+      this.status.status_id = null;
+      this.status.name_ar = '';
+      this.status.name_en = '';
+    },
+    validation(){
+      this.verrors = [];
+      if(this.status.name_ar === ''){this.verrors.push('الرجاء إدخال الإسم باللغة العربية');}
+      if(this.status.name_en === ''){this.verrors.push('الرجاء إدخال الإسم باللغة الإنجليزية');}
+      return this.verrors.length > 0 ? false : true;
+    }
+  }
+};
+</script>
