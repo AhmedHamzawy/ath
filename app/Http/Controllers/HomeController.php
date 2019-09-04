@@ -10,13 +10,13 @@ use App\Contact;
 use App\Order;
 use App\Doctor;
 use Carbon\Carbon;
-use App\Charts\OrdersMonths;
+/*use App\Charts\OrdersMonths;
 use App\Charts\OrdersYear;
 use App\Charts\DoctorsYear;
 use App\Charts\ClientsYear;
 use App\Charts\BestSales;
 use App\Charts\TopHospitalOrders;
-use Khill\Lavacharts\Lavacharts;
+use Khill\Lavacharts\Lavacharts;*/
 use Spatie\Activitylog\Models\Activity;
 use DB;
 use App\BankAccount;
@@ -40,13 +40,13 @@ class HomeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        $today_users = User::count();
+       /* $today_users = User::count();
         $yesterday_users = User::whereDate('created_at', today())->count();
-        $users_2_days_ago = User::whereDate('created_at', today()->subDays(2))->count();
+        $users_2_days_ago = User::whereDate('created_at', today()->subDays(2))->count();*/
        
         /*-- Charts Variables --*/
 
-        $ordersJan = Order::whereYear('created_at' , Carbon::now()->year)->whereMonth('created_at' , 1)->count();
+        /*$ordersJan = Order::whereYear('created_at' , Carbon::now()->year)->whereMonth('created_at' , 1)->count();
         $ordersFeb = Order::whereYear('created_at' , Carbon::now()->year)->whereMonth('created_at' , 2)->count();
         $ordersMar = Order::whereYear('created_at' , Carbon::now()->year)->whereMonth('created_at' , 3)->count();
         $ordersAbr = Order::whereYear('created_at' , Carbon::now()->year)->whereMonth('created_at' , 4)->count();
@@ -160,12 +160,12 @@ class HomeController extends Controller
         foreach($topHospitalOrdersNamesByMonth as $thonmonth){
             array_push($thonnamesmonth , $thonmonth->hospital_id);
             array_push($thonordersmonth , $thonmonth->orders);
-        }
+        }*/
 
         /*-- Charts Variables --*/
 
 
-        $ordersYear = new OrdersYear;
+        /*$ordersYear = new OrdersYear;
         $ordersYear->labels(['يناير', 'فبراير', 'مارس', 'إبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر']);
         $ordersYear->dataset('My dataset', 'line', [$ordersJan,$ordersFeb, $ordersMar, $ordersMay ,$ordersJun ,$ordersJul,$ordersAug,$ordersSep,$ordersOct,$ordersNov,$ordersDec])->options(['exporting' => ['width' => '600']]);
         $ordersYear->height(200);
@@ -230,7 +230,7 @@ class HomeController extends Controller
                 ->addRow(array('France', 600))
                 ->addRow(array('RU', 700));
 
-        $lava->GeoChart('Popularity', $popularity);
+        $lava->GeoChart('Popularity', $popularity);*/
 
         $ordersToday = Order::whereDay('created_at', Carbon::now()->day)->count();
         $ordersSucceededToday = Order::whereDay('created_at', Carbon::now()->day)->whereHas('state', function ($query) {
