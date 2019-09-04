@@ -638,7 +638,6 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-md-12" id="pop-div">
-                            <?= $lava->render('GeoChart', 'Popularity', 'pop-div') ?>
                         </div>
                     </div>
                 </div>
